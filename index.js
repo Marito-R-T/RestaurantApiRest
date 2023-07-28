@@ -1,6 +1,7 @@
 const express = require('express');
 const { connectToDb, getDb } = require('./db/db');
 const { getRestaurants, addRestaurant } = require('./controllers/restaurant/restaurants')
+const { getComments, addComment } = require('./controllers/comments/comments')
 
 // init app & middleware
 const app = express();
@@ -28,3 +29,7 @@ app.get('/restaurants', (req, res) => {
 app.post('/restaurants', (req, res) => {
   addRestaurant(req, res, db);
 });
+
+app.post('/comments', (req, res) => {
+  addComment(req, res, db);
+})

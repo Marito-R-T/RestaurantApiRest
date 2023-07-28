@@ -1,4 +1,4 @@
-
+const { getStars, getCommentsAsync } = require('../comments/comments')
 
 module.exports = {
   getRestaurants: (req, res, db) => {
@@ -19,14 +19,23 @@ module.exports = {
     }
     db.collection('restaurants')
       .find(filter)
-      .sort({ stars: -1 })
-      .forEach(restaurant => restaurants.push(restaurant))
-      .then(() => {
-        res.status(200).json(restaurants);
+      .forEach((restaurant) => {
+        console.log(restaurant)
+        restaurants.push(restaurant)
       })
       .catch((err) => {
         console.log(err)
         res.status(500).json({error: 'Could not fetch the documents'});
+      })
+      .finally(async () => {
+        for (const restaurant of restaurants) {
+          console.log(restaurant)
+          const comments = await getCommentsAsync(restaurant._id, db);
+          console.log(comments)
+          restaurant.comments = comments;
+          restaurant.stars = getStars(comments);
+        }
+        res.status(200).json(restaurants);
       });
   },
   addRestaurant: (req, res, db) => {
