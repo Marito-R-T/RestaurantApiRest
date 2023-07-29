@@ -57,5 +57,18 @@ module.exports = {
         console.log(err);
         res.status(500).json({error: 'Could not fetch the documents'});
       })
+  },
+  removeComment: (req, res, db) => {
+    let comment = req.body.comment_id;
+    db.collection("comments")
+      .deleteOne({ _id: new ObjectId(comment) })
+      .then((response) => {
+        console.log(response);
+        res.status(200).send("Eliminado!");
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({error: 'Could not fetch the documents'});
+      });
   }
 }

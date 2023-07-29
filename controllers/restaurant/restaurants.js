@@ -1,4 +1,5 @@
-const { getStars, getCommentsAsync } = require('../comments/comments')
+const { getStars, getCommentsAsync } = require('../comments/comments');
+const { ObjectId } = require("mongodb");
 
 module.exports = {
   getRestaurants: (req, res, db) => {
@@ -48,6 +49,19 @@ module.exports = {
       .then((response) => {
         console.log(response);
         res.status(200).send("Agregado!");
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({error: 'Could not fetch the documents'});
+      });
+  },
+  removeRestaurant: (req, res, db) => {
+    let restaurant = req.body.restaurant_id;
+    db.collection("restaurants")
+      .deleteOne({ _id: new ObjectId(restaurant) })
+      .then((response) => {
+        console.log(response);
+        res.status(200).send("Eliminado!");
       })
       .catch((err) => {
         console.log(err);
